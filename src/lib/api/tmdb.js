@@ -19,3 +19,26 @@ export const getPopularMovies = async () => {
     throw new Error(error.message);
   }
 };
+
+export const searchMovie = async (query, page) => {
+  if (!query) {
+    throw new Error("Search query is required");
+  }
+
+  try {
+    const response = await axios.get(
+      `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(
+        query
+      )}&include_adult=false&language=en-US&page=${page}`,
+      {
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(error.message || "Failed to search movies");
+  }
+};

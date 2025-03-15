@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { getPopularMovies } from "../api/tmdb";
+import { getPopularMovies, searchMovie } from "../api/tmdb";
 
 export const useMovieService = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -18,5 +18,18 @@ export const useMovieService = () => {
     }
   };
 
-  return { isLoading, error, handleGetPopularMovies };
+  const handleSearchMovies = async (query, page) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const movies = await searchMovie(query, page);
+      return movies;
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return { isLoading, error, handleGetPopularMovies, handleSearchMovies };
 };

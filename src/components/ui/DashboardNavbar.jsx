@@ -1,6 +1,7 @@
 import { AppBar, Button, Container, Toolbar, Typography } from "@mui/material";
 import { ExitToApp as LogoutIcon } from "@mui/icons-material";
 import useAuthService from "../../lib/hooks/authHooks";
+import { Link } from "react-router-dom";
 
 const DashboardNavbar = () => {
   const { handleSignOut } = useAuthService();
@@ -26,7 +27,9 @@ const DashboardNavbar = () => {
               color: "rgb(0, 115, 230)",
             }}
           >
-            WatchWise
+            <Link to="/dashboard" style={{ textDecoration: "none" }}>
+              WatchWise
+            </Link>
           </Typography>
 
           {/* Logout Button */}

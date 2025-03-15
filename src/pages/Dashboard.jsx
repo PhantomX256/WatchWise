@@ -1,18 +1,14 @@
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Container,
-  Typography,
-  CircularProgress,
-  Alert,
-} from "@mui/material";
+import { Box, Container, Typography, CircularProgress } from "@mui/material";
 import { useAuth } from "../lib/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 import SearchBar from "../components/shared/SearchBar";
 import ScrollableBar from "../components/shared/ScrollableBar";
 import { useMovieService } from "../lib/hooks/tmdb";
 
 const Dashboard = () => {
   const { userData } = useAuth();
+  const navigate = useNavigate();
   const [popularMovies, setPopularMovies] = useState([]);
   const { isLoading, error, handleGetPopularMovies } = useMovieService();
 
@@ -28,6 +24,14 @@ const Dashboard = () => {
 
     fetchPopularMovies();
   }, []);
+
+  // Function to handle search submission and redirect
+  const handleSearchSubmit = (query) => {
+    if (query.trim()) {
+      // Navigate to search page with query parameter
+      navigate(`/search?q=${encodeURIComponent(query)}&page=1`);
+    }
+  };
 
   return (
     <Box
@@ -60,7 +64,7 @@ const Dashboard = () => {
             color: "rgb(182, 190, 201)",
           }}
         >
-          <SearchBar />
+          <SearchBar onSubmitSearch={handleSearchSubmit} redirectOnSearch />
         </Box>
 
         {/* Popular Movies Section */}
@@ -99,7 +103,7 @@ const Dashboard = () => {
                 color: "rgb(182, 190, 201)",
               }}
             >
-              Check out this week’s most popular movies and find out where to
+              Check out this week's most popular movies and find out where to
               watch them.
             </p>
           </div>
