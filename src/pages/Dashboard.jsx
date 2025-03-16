@@ -4,7 +4,9 @@ import { useAuth } from "../lib/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../components/shared/SearchBar";
 import ScrollableBar from "../components/shared/ScrollableBar";
+import GenreScrollableBar from "../components/ui/GenreScrollableBar";
 import { useMovieService } from "../lib/hooks/tmdb";
+import { genres } from "../lib/constants/index";
 
 const Dashboard = () => {
   const { userData } = useAuth();
@@ -23,7 +25,7 @@ const Dashboard = () => {
     };
 
     fetchPopularMovies();
-  }, []);
+  }, [setPopularMovies]);
 
   // Function to handle search submission and redirect
   const handleSearchSubmit = (query) => {
@@ -124,6 +126,10 @@ const Dashboard = () => {
             )}
           </div>
         </div>
+
+        {genres.map((genre) => (
+          <GenreScrollableBar key={genre.id} genre={genre} />
+        ))}
       </Container>
     </Box>
   );

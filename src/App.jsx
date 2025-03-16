@@ -6,6 +6,7 @@ import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/Dashboard";
 import DashboardLayout from "./components/ui/DashboardLayout";
 import Search from "./pages/Search";
+import Details from "./pages/Details";
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
       <Route element={<DashboardLayout />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/search" element={<Search />} />
+        <Route path="/movie/:id" element={<Details />} />
       </Route>
     </Routes>
   );

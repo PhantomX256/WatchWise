@@ -10,6 +10,7 @@ import {
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
 const ScrollableBar = ({ movies, title, scrollAmount = 500 }) => {
   const scrollContainerRef = useRef(null);
@@ -100,55 +101,60 @@ const ScrollableBar = ({ movies, title, scrollAmount = 500 }) => {
         >
           {movies && movies.length > 0 ? (
             movies.map((movie) => (
-              <Card
+              <Link
+                to={`/movie/${movie.id}`}
                 key={movie.id}
-                sx={{
-                  minWidth: 180,
-                  maxWidth: 180,
-                  mr: 2,
-                  borderRadius: 2,
-                  flexShrink: 0,
-                  transition: "transform 0.3s",
-                  border: "1px solid rgba(28, 34, 38, 1)",
-                  "&:hover": {
-                    transform: "scale(1.05)",
-                  },
-                  backgroundColor: "transparent",
-                }}
+                style={{ textDecoration: "none" }}
               >
-                <CardMedia
-                  component="img"
-                  height="270"
-                  image={
-                    movie.poster_path
-                      ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-                      : "https://via.placeholder.com/500x750?text=No+Image"
-                  }
-                  alt={movie.title}
-                />
-                <CardContent sx={{ p: 1.5, "&:last-child": { pb: 1.5 } }}>
-                  <Typography
-                    variant="subtitle2"
-                    component="div"
-                    sx={{
-                      fontWeight: "bold",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                      color: "white",
-                      fontFamily: "Roboto",
-                      fontSize: "18px",
-                    }}
-                  >
-                    {movie.title}
-                  </Typography>
-                  {movie.release_date && (
-                    <Typography variant="caption" color="rgb(182, 190, 201);">
-                      {new Date(movie.release_date).getFullYear()}
+                <Card
+                  sx={{
+                    minWidth: 180,
+                    maxWidth: 180,
+                    mr: 2,
+                    borderRadius: 2,
+                    flexShrink: 0,
+                    transition: "transform 0.3s",
+                    border: "1px solid rgba(28, 34, 38, 1)",
+                    "&:hover": {
+                      transform: "scale(1.05)",
+                    },
+                    backgroundColor: "transparent",
+                  }}
+                >
+                  <CardMedia
+                    component="img"
+                    height="270"
+                    image={
+                      movie.poster_path
+                        ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                        : "https://via.placeholder.com/500x750?text=No+Image"
+                    }
+                    alt={movie.title}
+                  />
+                  <CardContent sx={{ p: 1.5, "&:last-child": { pb: 1.5 } }}>
+                    <Typography
+                      variant="subtitle2"
+                      component="div"
+                      sx={{
+                        fontWeight: "bold",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                        color: "white",
+                        fontFamily: "Roboto",
+                        fontSize: "18px",
+                      }}
+                    >
+                      {movie.title}
                     </Typography>
-                  )}
-                </CardContent>
-              </Card>
+                    {movie.release_date && (
+                      <Typography variant="caption" color="rgb(182, 190, 201);">
+                        {new Date(movie.release_date).getFullYear()}
+                      </Typography>
+                    )}
+                  </CardContent>
+                </Card>
+              </Link>
             ))
           ) : (
             <Typography variant="body1" sx={{ p: 2 }}>

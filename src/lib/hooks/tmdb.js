@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { getPopularMovies, searchMovie } from "../api/tmdb";
+import {
+  getMovieDetails,
+  getMoviesByGenre,
+  getPopularMovies,
+  searchMovie,
+} from "../api/tmdb";
 
 export const useMovieService = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -31,5 +36,38 @@ export const useMovieService = () => {
     }
   };
 
-  return { isLoading, error, handleGetPopularMovies, handleSearchMovies };
+  const handleGetMoviesByGenre = async (genres, page) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const movies = await getMoviesByGenre(genres, page);
+      return movies;
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGetMovieDetails = async (movieId) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const movieDetails = await getMovieDetails(movieId);
+      return movieDetails;
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return {
+    isLoading,
+    error,
+    handleGetPopularMovies,
+    handleSearchMovies,
+    handleGetMoviesByGenre,
+    handleGetMovieDetails,
+  };
 };
