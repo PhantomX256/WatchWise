@@ -49,24 +49,29 @@ const Dashboard = () => {
           variant="h4"
           component="h1"
           gutterBottom
-          sx={{ color: "white" }}
+          sx={{ color: "white", textAlign: "center" }}
         >
           Welcome, {userData?.fullName || "User"}!
         </Typography>
 
         {/* Search Box */}
-        <Box
-          sx={{
-            backgroundColor: "rgb(22, 26, 30)",
-            borderRadius: 2,
-            p: 3,
-            border: "1px solid rgb(28, 34, 38)",
-            mt: 3,
-            mb: 5,
-            color: "rgb(182, 190, 201)",
-          }}
-        >
-          <SearchBar onSubmitSearch={handleSearchSubmit} redirectOnSearch />
+        <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
+          <Box
+            sx={{
+              backgroundColor: "rgb(22, 26, 30)",
+              borderRadius: 2,
+              p: 3,
+              border: "1px solid rgb(28, 34, 38)",
+              mt: 3,
+              mb: 5,
+              color: "rgb(182, 190, 201)",
+              flex: 1,
+              maxWidth: "50%",
+              textAlign: "center",
+            }}
+          >
+            <SearchBar onSubmitSearch={handleSearchSubmit} redirectOnSearch />
+          </Box>
         </Box>
 
         {/* Popular Movies Section */}

@@ -7,6 +7,8 @@ import Dashboard from "./pages/Dashboard";
 import DashboardLayout from "./components/ui/DashboardLayout";
 import Search from "./pages/Search";
 import Details from "./pages/Details";
+import Watchlist from "./pages/Watchlist";
+import WatchlistDetails from "./pages/WatchlistDetails";
 
 const App = () => {
   return (
@@ -19,6 +21,8 @@ const App = () => {
       <Route element={<DashboardLayout />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/search" element={<Search />} />
+        <Route path="/watchlist" element={<Watchlist />} />
+        <Route path="/watchlist/:id" element={<WatchlistDetails />} />
         <Route path="/movie/:id" element={<Details />} />
       </Route>
     </Routes>

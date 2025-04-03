@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import {
   Box,
   Container,
@@ -115,58 +115,63 @@ const Search = () => {
             <Grid2 container spacing={3}>
               {searchResults.map((movie) => (
                 <Grid2 xs={12} sm={6} md={4} lg={3} key={movie.id}>
-                  <Card
-                    key={movie.id}
-                    sx={{
-                      minWidth: 180,
-                      maxWidth: 180,
-                      mr: 2,
-                      borderRadius: 2,
-                      flexShrink: 0,
-                      transition: "transform 0.3s",
-                      border: "1px solid rgba(28, 34, 38, 1)",
-                      "&:hover": {
-                        transform: "scale(1.05)",
-                      },
-                      backgroundColor: "transparent",
-                    }}
+                  <Link
+                    to={`/movie/${movie.id}`}
+                    style={{ textDecoration: "none" }}
                   >
-                    <CardMedia
-                      component="img"
-                      height="270"
-                      image={
-                        movie.poster_path
-                          ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-                          : "https://via.placeholder.com/500x750?text=No+Image"
-                      }
-                      alt={movie.title}
-                    />
-                    <CardContent sx={{ p: 1.5, "&:last-child": { pb: 1.5 } }}>
-                      <Typography
-                        variant="subtitle2"
-                        component="div"
-                        sx={{
-                          fontWeight: "bold",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
-                          color: "white",
-                          fontFamily: "Roboto",
-                          fontSize: "18px",
-                        }}
-                      >
-                        {movie.title}
-                      </Typography>
-                      {movie.release_date && (
+                    <Card
+                      key={movie.id}
+                      sx={{
+                        minWidth: 180,
+                        maxWidth: 180,
+                        mr: 2,
+                        borderRadius: 2,
+                        flexShrink: 0,
+                        transition: "transform 0.3s",
+                        border: "1px solid rgba(28, 34, 38, 1)",
+                        "&:hover": {
+                          transform: "scale(1.05)",
+                        },
+                        backgroundColor: "transparent",
+                      }}
+                    >
+                      <CardMedia
+                        component="img"
+                        height="270"
+                        image={
+                          movie.poster_path
+                            ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                            : "https://via.placeholder.com/500x750?text=No+Image"
+                        }
+                        alt={movie.title}
+                      />
+                      <CardContent sx={{ p: 1.5, "&:last-child": { pb: 1.5 } }}>
                         <Typography
-                          variant="caption"
-                          color="rgb(182, 190, 201);"
+                          variant="subtitle2"
+                          component="div"
+                          sx={{
+                            fontWeight: "bold",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                            color: "white",
+                            fontFamily: "Roboto",
+                            fontSize: "18px",
+                          }}
                         >
-                          {new Date(movie.release_date).getFullYear()}
+                          {movie.title}
                         </Typography>
-                      )}
-                    </CardContent>
-                  </Card>
+                        {movie.release_date && (
+                          <Typography
+                            variant="caption"
+                            color="rgb(182, 190, 201);"
+                          >
+                            {new Date(movie.release_date).getFullYear()}
+                          </Typography>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </Link>
                 </Grid2>
               ))}
             </Grid2>

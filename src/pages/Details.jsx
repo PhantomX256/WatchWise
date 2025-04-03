@@ -7,12 +7,9 @@ import {
   Typography,
   Chip,
   CircularProgress,
-  Rating,
   Grid,
-  Paper,
   Stack,
   Button,
-  Divider,
   Alert,
 } from "@mui/material";
 import {
@@ -20,9 +17,9 @@ import {
   BookmarkBorder,
   AccessTime,
   CalendarToday,
-  Language,
   Star,
 } from "@mui/icons-material";
+import WatchProviderList from "../components/ui/WatchProviderList";
 
 const Details = () => {
   const { id } = useParams();
@@ -108,6 +105,7 @@ const Details = () => {
         width: "100%",
         position: "relative",
         overflowX: "hidden",
+        backgroundColor: "rgb(15, 18, 20)",
       }}
     >
       {/* Backdrop image with overlay */}
@@ -117,7 +115,7 @@ const Details = () => {
           top: 0,
           left: 0,
           width: "100%",
-          height: "100vh",
+          height: "100%",
           backgroundImage: movie.backdrop_path
             ? `url(https://image.tmdb.org/t/p/original${movie.backdrop_path})`
             : "none",
@@ -134,7 +132,7 @@ const Details = () => {
             backgroundColor: "rgba(15, 18, 20, 0.85)", // Dark overlay with 85% opacity
             backdropFilter: "blur(8px)", // Blur effect for the backdrop
           },
-          zIndex: -1,
+          zIndex: 1,
         }}
       />
 
@@ -283,6 +281,11 @@ const Details = () => {
             </Stack>
           </Grid>
         </Grid>
+
+        {/* Watch Providers Section */}
+        <Box sx={{ mt: 5 }}>
+          <WatchProviderList movieId={id} countryCode="IN" />
+        </Box>
       </Container>
     </Box>
   );

@@ -3,6 +3,8 @@ import {
   getMovieDetails,
   getMoviesByGenre,
   getPopularMovies,
+  getWatchListMovies,
+  getWatchProviders,
   searchMovie,
 } from "../api/tmdb";
 
@@ -62,6 +64,32 @@ export const useMovieService = () => {
     }
   };
 
+  const handleGetWatchProviders = async (movieId) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const watchProviders = await getWatchProviders(movieId);
+      return watchProviders;
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGetWatchListMovies = async (movies) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const movies = await getWatchListMovies(movies);
+      return movies;
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return {
     isLoading,
     error,
@@ -69,5 +97,7 @@ export const useMovieService = () => {
     handleSearchMovies,
     handleGetMoviesByGenre,
     handleGetMovieDetails,
+    handleGetWatchProviders,
+    handleGetWatchListMovies,
   };
 };

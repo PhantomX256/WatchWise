@@ -1,5 +1,15 @@
-import { AppBar, Button, Container, Toolbar, Typography } from "@mui/material";
-import { ExitToApp as LogoutIcon } from "@mui/icons-material";
+import {
+  AppBar,
+  Button,
+  Container,
+  Toolbar,
+  Typography,
+  Box,
+} from "@mui/material";
+import {
+  ExitToApp as LogoutIcon,
+  Bookmarks as WatchlistIcon,
+} from "@mui/icons-material";
 import useAuthService from "../../lib/hooks/authHooks";
 import { Link } from "react-router-dom";
 
@@ -27,15 +37,45 @@ const DashboardNavbar = () => {
               color: "rgb(0, 115, 230)",
             }}
           >
-            <Link to="/dashboard" style={{ textDecoration: "none" }}>
+            <Link
+              to="/dashboard"
+              style={{ textDecoration: "none", color: "rgb(0, 115, 230)" }}
+            >
               WatchWise
             </Link>
           </Typography>
 
-          {/* Logout Button */}
-          <Button startIcon={<LogoutIcon />} onClick={handleSignOut}>
-            Logout
-          </Button>
+          {/* Navigation Items */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            {/* Watchlist Button */}
+            <Button
+              component={Link}
+              to="/watchlist"
+              startIcon={<WatchlistIcon />}
+              sx={{
+                color: "white",
+                "&:hover": {
+                  backgroundColor: "rgba(255, 255, 255, 0.08)",
+                },
+              }}
+            >
+              Watchlist
+            </Button>
+
+            {/* Logout Button */}
+            <Button
+              startIcon={<LogoutIcon />}
+              onClick={handleSignOut}
+              sx={{
+                color: "white",
+                "&:hover": {
+                  backgroundColor: "rgba(255, 255, 255, 0.08)",
+                },
+              }}
+            >
+              Logout
+            </Button>
+          </Box>
         </Toolbar>
       </Container>
     </AppBar>

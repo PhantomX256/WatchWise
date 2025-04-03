@@ -76,7 +76,7 @@ const SearchBar = ({ onSubmitSearch, redirectOnSearch }) => {
             sx: {
               color: "white",
               backgroundColor: "rgba(255, 255, 255, 0.05)",
-              borderRadius: 1,
+              borderRadius: "10px",
               "& fieldset": {
                 borderColor: "rgb(38, 45, 52)",
               },
