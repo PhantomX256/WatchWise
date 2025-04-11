@@ -174,3 +174,119 @@ export const getWatchListDetails = async (id) => {
     throw error;
   }
 };
+
+export const addMovieToWatchlist = async (movieId, watchlistId) => {
+  try {
+    // Ensure the current user is logged in
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
+      throw new Error("User must be authenticated to update watchlist");
+    }
+
+    // Get the watchlist document
+    const watchlistRef = doc(db, "watchlists", watchlistId);
+    const watchlistSnapshot = await getDoc(watchlistRef);
+
+    // Check if the watchlist exists
+    if (!watchlistSnapshot.exists()) {
+      throw new Error("Watchlist not found");
+    }
+
+    // Get watchlist data
+    const watchlistData = watchlistSnapshot.data();
+
+    // Check if the current user has access to this watchlist
+    if (!watchlistData.members.includes(currentUser.uid)) {
+      throw new Error("You don't have access to this watchlist");
+    }
+
+    // Check if the movie is already in the watchlist
+    if (
+      watchlistData.movies &&
+      watchlistData.movies.includes(movieId.toString())
+    ) {
+      throw new Error("This movie is already in the watchlist");
+    }
+
+    // Add the movie to the watchlist
+    await updateDoc(watchlistRef, {
+      movies: arrayUnion(movieId.toString()),
+      updatedAt: serverTimestamp(),
+    });
+
+    return {
+      success: true,
+      message: "Movie added to watchlist successfully",
+    };
+  } catch (error) {
+    console.error("Error adding movie to watchlist:", error);
+    throw error;
+  }
+};
+
+export const addMemberToWatchlist = async (userId, watchlistId) => {
+  try {
+    // Ensure the current user is logged in
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
+      throw new Error("User must be authenticated to update watchlist");
+    }
+
+    // Get the watchlist document
+    const watchlistRef = doc(db, "watchlists", watchlistId);
+    const watchlistSnapshot = await getDoc(watchlistRef);
+
+    // Check if the watchlist exists
+    if (!watchlistSnapshot.exists()) {
+      throw new Error("Watchlist not found");
+    }
+
+    // Get watchlist data
+    const watchlistData = watchlistSnapshot.data();
+
+    // Check if the current user has access to this watchlist
+    // Only allow modifications if user is a member
+    if (!watchlistData.members.includes(currentUser.uid)) {
+      throw new Error("You don't have access to this watchlist");
+    }
+
+    // Check if the user is already a member of the watchlist
+    if (watchlistData.members.includes(userId)) {
+      throw new Error("This user is already a member of the watchlist");
+    }
+
+    // Check if the user exists in the users collection
+    const userRef = doc(db, "users", userId);
+    const userSnapshot = await getDoc(userRef);
+
+    // Verify the user exists before adding them
+    if (!userSnapshot.exists()) {
+      throw new Error(
+        "User not found. Cannot add non-existent user to watchlist"
+      );
+    }
+
+    // Add the user to the members array
+    await updateDoc(watchlistRef, {
+      members: arrayUnion(userId),
+      updatedAt: serverTimestamp(),
+    });
+
+    // Get the user data to return with the response
+    const userData = userSnapshot.data();
+
+    return {
+      success: true,
+      message: "Member added to watchlist successfully",
+      member: {
+        id: userId,
+        name: userData.fullName || "Unknown User",
+        email: userData.email || "No email provided",
+        photoURL: userData.photoURL || null,
+      },
+    };
+  } catch (error) {
+    console.error("Error adding member to watchlist:", error);
+    throw error;
+  }
+};

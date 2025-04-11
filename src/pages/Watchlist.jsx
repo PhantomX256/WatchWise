@@ -30,10 +30,14 @@ import {
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useWatchListService } from "../lib/hooks/watchlistHooks";
+import { useMovieService } from "../lib/hooks/tmdb";
 
 const Watchlist = () => {
   const { isLoading, error, handleGetWatchlists, handleCreateWatchlist } =
     useWatchListService();
+  const { isLoading: movieLoading, handleGetWatchListMovies } =
+    useMovieService();
+  const [watchlistMovies, setWatchlistMovies] = useState({});
   const [watchlists, setWatchlists] = useState([]);
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
   const [newWatchlistTitle, setNewWatchlistTitle] = useState("");
@@ -49,6 +53,9 @@ const Watchlist = () => {
       try {
         const data = await handleGetWatchlists();
         setWatchlists(data);
+
+        // After getting watchlists, load movies for each watchlist
+        loadWatchlistMovies(data);
       } catch (err) {
         // Error is handled by the hook
         console.error("Failed to load watchlists", err);
@@ -57,6 +64,23 @@ const Watchlist = () => {
 
     loadWatchlists();
   }, []);
+
+  const loadWatchlistMovies = async (watchlistsData) => {
+    const moviesObj = {};
+    try {
+      // For each watchlist that has movies, fetch the movie details
+      for (const watchlist of watchlistsData) {
+        if (watchlist.movies && watchlist.movies.length > 0) {
+          const movieDetails = await handleGetWatchListMovies(watchlist.movies);
+          moviesObj[watchlist.id] = movieDetails;
+        }
+      }
+
+      setWatchlistMovies(moviesObj);
+    } catch (err) {
+      console.error("Failed to load watchlist movies", err);
+    }
+  };
 
   const handleOpenWatchlist = (id) => {
     navigate(`/watchlist/${id}`);
@@ -245,32 +269,104 @@ const Watchlist = () => {
                       </Typography>
                     }
                     secondary={
-                      <Box sx={{ display: "flex", mt: 1 }}>
-                        <Chip
-                          icon={<PeopleIcon />}
-                          label={`${watchlist.members?.length || 1} ${
-                            watchlist.members?.length === 1
-                              ? "Member"
-                              : "Members"
-                          }`}
-                          size="small"
-                          sx={{
-                            mr: 1,
-                            bgcolor: "rgba(58, 105, 172, 0.3)",
-                            color: "rgb(182, 190, 201)",
-                          }}
-                        />
-                        <Chip
-                          icon={<MovieIcon />}
-                          label={`${watchlist.movies?.length || 0} ${
-                            watchlist.movies?.length === 1 ? "Movie" : "Movies"
-                          }`}
-                          size="small"
-                          sx={{
-                            bgcolor: "rgba(58, 105, 172, 0.3)",
-                            color: "rgb(182, 190, 201)",
-                          }}
-                        />
+                      <Box sx={{ display: "flex", flexDirection: "column" }}>
+                        <Box sx={{ display: "flex", mt: 1, mb: 1 }}>
+                          <Chip
+                            icon={<PeopleIcon />}
+                            label={`${watchlist.members?.length || 1} ${
+                              watchlist.members?.length === 1
+                                ? "Member"
+                                : "Members"
+                            }`}
+                            size="small"
+                            sx={{
+                              mr: 1,
+                              bgcolor: "rgba(58, 105, 172, 0.3)",
+                              color: "rgb(182, 190, 201)",
+                            }}
+                          />
+                          <Chip
+                            icon={<MovieIcon />}
+                            label={`${watchlist.movies?.length || 0} ${
+                              watchlist.movies?.length === 1
+                                ? "Movie"
+                                : "Movies"
+                            }`}
+                            size="small"
+                            sx={{
+                              bgcolor: "rgba(58, 105, 172, 0.3)",
+                              color: "rgb(182, 190, 201)",
+                            }}
+                          />
+                        </Box>
+
+                        {/* Movie Thumbnails */}
+                        {watchlistMovies[watchlist.id] &&
+                          watchlistMovies[watchlist.id].length > 0 && (
+                            <Box
+                              sx={{
+                                display: "flex",
+                                mt: 1,
+                                gap: 1,
+                                overflow: "hidden",
+                              }}
+                            >
+                              {watchlistMovies[watchlist.id]
+                                .slice(0, 3)
+                                .map((movie) => (
+                                  <Box
+                                    key={movie.id}
+                                    sx={{
+                                      width: 60,
+                                      height: 90,
+                                      borderRadius: 1,
+                                      overflow: "hidden",
+                                      position: "relative",
+                                    }}
+                                  >
+                                    <img
+                                      src={`https://image.tmdb.org/t/p/w92${movie.poster_path}`}
+                                      alt={movie.title}
+                                      style={{
+                                        width: "100%",
+                                        height: "100%",
+                                        objectFit: "cover",
+                                      }}
+                                      onError={(e) => {
+                                        e.target.src =
+                                          "https://via.placeholder.com/92x138?text=No+Image";
+                                      }}
+                                    />
+                                  </Box>
+                                ))}
+                              {watchlistMovies[watchlist.id].length > 3 && (
+                                <Box
+                                  sx={{
+                                    width: 60,
+                                    height: 90,
+                                    borderRadius: 1,
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    backgroundColor: "rgba(28, 34, 38, 0.9)",
+                                    color: "white",
+                                  }}
+                                >
+                                  +{watchlistMovies[watchlist.id].length - 3}
+                                </Box>
+                              )}
+                            </Box>
+                          )}
+                        {movieLoading &&
+                          watchlist.movies?.length > 0 &&
+                          !watchlistMovies[watchlist.id] && (
+                            <Box sx={{ display: "flex", mt: 1 }}>
+                              <CircularProgress
+                                size={20}
+                                sx={{ color: "rgba(58, 105, 172, 0.8)" }}
+                              />
+                            </Box>
+                          )}
                       </Box>
                     }
                     sx={{ ml: 1 }}

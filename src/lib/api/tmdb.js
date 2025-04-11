@@ -148,3 +148,25 @@ export const getWatchListMovies = async (movieIds) => {
     throw new Error("Failed to fetch watchlist movies");
   }
 };
+
+export const getRecommendedMovies = async (movieId) => {
+  if (!movieId) {
+    throw new Error("Movie ID is required");
+  }
+
+  try {
+    const response = await axios.get(
+      `https://api.themoviedb.org/3/movie/${movieId}/recommendations?language=en-US&page=1`,
+      {
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data.results;
+  } catch (error) {
+    throw new Error(error.message || "Failed to fetch movie recommendations");
+  }
+};

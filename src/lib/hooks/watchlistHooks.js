@@ -1,39 +1,40 @@
 import { useState } from "react";
 import {
-  getWatchLists,
   createWatchlist,
+  getWatchLists,
   getWatchListDetails,
+  addMovieToWatchlist,
+  addMemberToWatchlist,
 } from "../firebase/watchlistService";
 
 export const useWatchListService = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const handleGetWatchlists = async () => {
+  // Define all handler functions first before using any of them
+  const handleCreateWatchlist = async (watchlistData) => {
     setIsLoading(true);
     setError(null);
-
     try {
-      const watchlists = await getWatchLists();
+      const result = await createWatchlist(watchlistData);
       setIsLoading(false);
-      return watchlists;
+      return result;
     } catch (err) {
-      setError(err.message || "Failed to fetch watchlists");
+      setError(err.message);
       setIsLoading(false);
       throw err;
     }
   };
 
-  const handleCreateWatchlist = async (watchlistData) => {
+  const handleGetWatchlists = async () => {
     setIsLoading(true);
     setError(null);
-
     try {
-      const newWatchlist = await createWatchlist(watchlistData);
+      const watchlists = await getWatchLists();
       setIsLoading(false);
-      return newWatchlist;
+      return watchlists;
     } catch (err) {
-      setError(err.message || "Failed to create watchlist");
+      setError(err.message);
       setIsLoading(false);
       throw err;
     }
@@ -42,23 +43,53 @@ export const useWatchListService = () => {
   const handleGetWatchlistDetails = async (watchlistId) => {
     setIsLoading(true);
     setError(null);
-
     try {
-      const watchlistDetails = await getWatchListDetails(watchlistId);
+      const watchlist = await getWatchListDetails(watchlistId);
       setIsLoading(false);
-      return watchlistDetails;
+      return watchlist;
     } catch (err) {
-      setError(err.message || "Failed to fetch watchlist details");
+      setError(err.message);
       setIsLoading(false);
       throw err;
     }
   };
 
+  const handleAddMovieToWatchlist = async (movieId, watchlistId) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const result = await addMovieToWatchlist(movieId, watchlistId);
+      setIsLoading(false);
+      return result;
+    } catch (err) {
+      setError(err.message);
+      setIsLoading(false);
+      throw err;
+    }
+  };
+
+  const handleAddMemberToWatchlist = async (userId, watchlistId) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const result = await addMemberToWatchlist(userId, watchlistId);
+      setIsLoading(false);
+      return result;
+    } catch (err) {
+      setError(err.message);
+      setIsLoading(false);
+      throw err;
+    }
+  };
+
+  // Return all handler functions
   return {
     isLoading,
     error,
-    handleGetWatchlists,
     handleCreateWatchlist,
+    handleGetWatchlists,
     handleGetWatchlistDetails,
+    handleAddMovieToWatchlist,
+    handleAddMemberToWatchlist,
   };
 };
